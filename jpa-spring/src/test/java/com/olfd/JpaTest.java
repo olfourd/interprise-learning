@@ -3,6 +3,9 @@ package com.olfd;
 import com.olfd.config.JpaConfig;
 import com.olfd.domain.model.Position;
 import com.olfd.domain.repository.PositionRepository;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.when;
@@ -29,12 +33,13 @@ class JpaTest {
     AuditorAware<String> auditorAware;
 
     @Test
+    @SneakyThrows
     void autoSettingRevisionFields() {
-        var position = stubPosition();
+        var stubPosition = stubPosition();
 
         final var sys_user = "sys_user";
         when(auditorAware.getCurrentAuditor()).thenReturn(Optional.of(sys_user));
-        position = positionRepository.save(position);
+        final var position = positionRepository.save(stubPosition);
 
         assertThat(position.getCreatedBy(), is(sys_user));
         assertThat(position.getCreatedDate(), notNullValue());
@@ -44,12 +49,14 @@ class JpaTest {
 
         final var other_sys_user = "other sys_user";
         when(auditorAware.getCurrentAuditor()).thenReturn(Optional.of(other_sys_user));
-        position = positionRepository.save(position);
-
-        assertThat(position.getCreatedBy(), is(sys_user));
-        assertThat(position.getLastModifiedBy(), is(other_sys_user));
-        assertThat(position.getLastModifiedDate(), not(position.getCreatedDate()));
-        assertThat(position.getVersion(), is(1L));
+        await().until(() -> {
+                    var updated = positionRepository.saveAndFlush(position);
+                    assertThat(updated.getCreatedBy(), is(sys_user));
+                    assertThat(updated.getLastModifiedBy(), is(other_sys_user));
+                    assertThat(updated.getLastModifiedDate(), not(updated.getCreatedDate()));
+                    assertThat(updated.getVersion(), is(1L));
+                    return true;
+                });
     }
 
     @Test
