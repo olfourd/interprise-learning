@@ -1,4 +1,4 @@
-package com.olfd.jpa.model;
+package com.olfd.domain.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

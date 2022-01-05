@@ -15,4 +15,7 @@ spring:
     console:
       enabled: true
 
-
+logging:
+  level:
+    org.springframework.web: info
+    org.hibernate: info

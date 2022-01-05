@@ -1,4 +1,4 @@
-package com.olfd.jpa.model;
+package com.olfd.domain.model;
 
 import lombok.*;
 import org.hibernate.envers.Audited;

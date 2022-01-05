@@ -1,8 +1,8 @@
 package com.olfd;
 
-import com.olfd.jpa.config.JpaConfig;
-import com.olfd.jpa.model.Position;
-import com.olfd.jpa.repository.PositionRepository;
+import com.olfd.config.JpaConfig;
+import com.olfd.domain.model.Position;
+import com.olfd.domain.repository.PositionRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

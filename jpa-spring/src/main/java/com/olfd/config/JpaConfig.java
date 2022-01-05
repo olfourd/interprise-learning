@@ -1,6 +1,5 @@
-package com.olfd.jpa.config;
+package com.olfd.config;
 
-import com.olfd.jpa.repository.PositionRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -15,7 +14,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Optional;
@@ -23,7 +21,7 @@ import java.util.Optional;
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "customAuditorAware")
 @EnableJpaRepositories(
-        basePackageClasses = PositionRepository.class,
+        basePackages = "com.olfd.domain.repository",
         repositoryFactoryBeanClass = EnversRevisionRepositoryFactoryBean.class
 )
 @EnableEnversRepositories
@@ -45,13 +43,12 @@ public class JpaConfig {
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setGenerateDdl(true);
 
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(vendorAdapter);
-        factory.setPackagesToScan("com.olfd.jpa");
+        factory.setPackagesToScan("com.olfd.domain");
         factory.setDataSource(dataSource());
         return factory;
     }
