@@ -1,0 +1,19 @@
+services:
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: users
+      POSTGRES_USER: olfd
+      POSTGRES_PASSWORD: olfd
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init-scheme.sql:/docker-entrypoint-initdb.d/init-scheme.sql
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 9000:8080
