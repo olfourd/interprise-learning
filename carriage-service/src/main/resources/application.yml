@@ -1,0 +1,13 @@
+server:
+  port: 8999
+spring:
+  data:
+    mongodb:
+      database: "admin"
+      username: "olfd"
+      password: "olfd"
+      host: "localhost"
+      port: 27017
+logging:
+  level:
+   root: debug

@@ -1,0 +1,29 @@
+version: '3.1'
+
+services:
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: olfd
+      MONGO_INITDB_ROOT_PASSWORD: olfd
+      MONGO_INITDB_DATABASE: carriage
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+
+  mongo-express:
+    image: mongo-express:latest
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_URL: mongodb://localhost:27017/carriage
+      ME_CONFIG_MONGODB_ADMINUSERNAME: olfd
+      ME_CONFIG_MONGODB_ADMINPASSWORD: olfd
+    depends_on:
+      - mongodb
+    ports:
+      - "9001:8081"
