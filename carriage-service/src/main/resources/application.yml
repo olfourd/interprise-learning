@@ -1,6 +1,8 @@
 server:
   port: 8999
 spring:
+  application:
+    name: carriage-service
   data:
     mongodb:
       database: "admin"
@@ -8,6 +10,7 @@ spring:
       password: "olfd"
       host: "localhost"
       port: 27017
-logging:
-  level:
-   root: debug
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
